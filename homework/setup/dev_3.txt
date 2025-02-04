@@ -1,0 +1,108 @@
+(cs4200-coding) root@3cbc202abc08:/workspace# python3 -c "import numpy as np; np.show_config()"
+mkl-service + Intel(R) MKL: THREADING LAYER: (null)
+mkl-service + Intel(R) MKL: setting Intel(R) MKL to use INTEL OpenMP runtime
+mkl-service + Intel(R) MKL: preloading libiomp5.so runtime
+MKL_VERBOSE oneMKL 2023.0 Update 1 Product build 20230303 for Intel(R) 64 architecture Intel(R) Advanced Vector Extensions 512 (Intel(R) AVX-512) with support of Intel(R) Deep Learning Boost (Intel(R) DL Boost), EVEX-encoded AES and Carry-Less Multiplication Quadword instructions, Lnx 2.50GHz lp64 intel_thread
+MKL_VERBOSE SDOT(2,0x256f5bf0,1,0x256f5bf0,1) 3.87ms CNR:OFF Dyn:1 FastMM:1 TID:0  NThr:8
+Build Dependencies:
+  blas:
+    detection method: pkgconfig
+    found: true
+    include directory: /opt/conda/envs/cs4200-coding/include
+    lib directory: /opt/conda/envs/cs4200-coding/lib
+    name: mkl-sdl
+    openblas configuration: unknown
+    pc file directory: /opt/conda/envs/cs4200-coding/lib/pkgconfig
+    version: '2023.1'
+  lapack:
+    detection method: internal
+    found: true
+    include directory: unknown
+    lib directory: unknown
+    name: dep140173291535280
+    openblas configuration: unknown
+    pc file directory: unknown
+    version: 1.26.4
+Compilers:
+  c:
+    args: -march=nocona, -mtune=haswell, -ftree-vectorize, -fPIC, -fstack-protector-strong,
+      -fno-plt, -O2, -ffunction-sections, -pipe, -isystem, /opt/conda/envs/cs4200-coding/include,
+      -fdebug-prefix-map=/croot/numpy_and_numpy_base_1708638617955/work=/usr/local/src/conda/numpy-base-1.26.4,
+      -fdebug-prefix-map=/opt/conda/envs/cs4200-coding=/usr/local/src/conda-prefix,
+      -DNDEBUG, -D_FORTIFY_SOURCE=2, -O2, -isystem, /opt/conda/envs/cs4200-coding/include
+    commands: /croot/numpy_and_numpy_base_1708638617955/_build_env/bin/x86_64-conda-linux-gnu-cc
+    linker: ld.bfd
+    linker args: -Wl,-O2, -Wl,--sort-common, -Wl,--as-needed, -Wl,-z,relro, -Wl,-z,now,
+      -Wl,--disable-new-dtags, -Wl,--gc-sections, -Wl,-rpath,/opt/conda/envs/cs4200-coding/lib,
+      -Wl,-rpath-link,/opt/conda/envs/cs4200-coding/lib, -L/opt/conda/envs/cs4200-coding/lib,
+      -march=nocona, -mtune=haswell, -ftree-vectorize, -fPIC, -fstack-protector-strong,
+      -fno-plt, -O2, -ffunction-sections, -pipe, -isystem, /opt/conda/envs/cs4200-coding/include,
+      -fdebug-prefix-map=/croot/numpy_and_numpy_base_1708638617955/work=/usr/local/src/conda/numpy-base-1.26.4,
+      -fdebug-prefix-map=/opt/conda/envs/cs4200-coding=/usr/local/src/conda-prefix,
+      -DNDEBUG, -D_FORTIFY_SOURCE=2, -O2, -isystem, /opt/conda/envs/cs4200-coding/include
+    name: gcc
+    version: 11.2.0
+  c++:
+    args: -fvisibility-inlines-hidden, -std=c++17, -fmessage-length=0, -march=nocona,
+      -mtune=haswell, -ftree-vectorize, -fPIC, -fstack-protector-strong, -fno-plt,
+      -O2, -ffunction-sections, -pipe, -isystem, /opt/conda/envs/cs4200-coding/include,
+      -fdebug-prefix-map=/croot/numpy_and_numpy_base_1708638617955/work=/usr/local/src/conda/numpy-base-1.26.4,
+      -fdebug-prefix-map=/opt/conda/envs/cs4200-coding=/usr/local/src/conda-prefix,
+      -DNDEBUG, -D_FORTIFY_SOURCE=2, -O2, -isystem, /opt/conda/envs/cs4200-coding/include
+    commands: /croot/numpy_and_numpy_base_1708638617955/_build_env/bin/x86_64-conda-linux-gnu-c++
+    linker: ld.bfd
+    linker args: -Wl,-O2, -Wl,--sort-common, -Wl,--as-needed, -Wl,-z,relro, -Wl,-z,now,
+      -Wl,--disable-new-dtags, -Wl,--gc-sections, -Wl,-rpath,/opt/conda/envs/cs4200-coding/lib,
+      -Wl,-rpath-link,/opt/conda/envs/cs4200-coding/lib, -L/opt/conda/envs/cs4200-coding/lib,
+      -fvisibility-inlines-hidden, -std=c++17, -fmessage-length=0, -march=nocona,
+      -mtune=haswell, -ftree-vectorize, -fPIC, -fstack-protector-strong, -fno-plt,
+      -O2, -ffunction-sections, -pipe, -isystem, /opt/conda/envs/cs4200-coding/include,
+      -fdebug-prefix-map=/croot/numpy_and_numpy_base_1708638617955/work=/usr/local/src/conda/numpy-base-1.26.4,
+      -fdebug-prefix-map=/opt/conda/envs/cs4200-coding=/usr/local/src/conda-prefix,
+      -DNDEBUG, -D_FORTIFY_SOURCE=2, -O2, -isystem, /opt/conda/envs/cs4200-coding/include
+    name: gcc
+    version: 11.2.0
+  cython:
+    commands: cython
+    linker: cython
+    name: cython
+    version: 3.0.8
+Machine Information:
+  build:
+    cpu: x86_64
+    endian: little
+    family: x86_64
+    system: linux
+  host:
+    cpu: x86_64
+    endian: little
+    family: x86_64
+    system: linux
+Python Information:
+  path: /opt/conda/envs/cs4200-coding/bin/python
+  version: '3.9'
+SIMD Extensions:
+  baseline:
+  - SSE
+  - SSE2
+  - SSE3
+  found:
+  - SSSE3
+  - SSE41
+  - POPCNT
+  - SSE42
+  - AVX
+  - F16C
+  - FMA3
+  - AVX2
+  - AVX512F
+  - AVX512CD
+  - AVX512_SKX
+  - AVX512_CLX
+  - AVX512_CNL
+  - AVX512_ICL
+  not found:
+  - AVX512_KNL
+  - AVX512_KNM
+
+(cs4200-coding) root@3cbc202abc08:/workspace#
