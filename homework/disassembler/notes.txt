@@ -1,0 +1,9 @@
+To run the jupyter from a folder with the notebook:
+
+  conda activate cs4200-coding
+  jupyter lab
+
+You will need to expose ports if running from a docker container.
+
+    --net=host
+    -p 8080:8080
