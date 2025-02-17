@@ -174,3 +174,16 @@ def main():
 
 if(__name__ == "__main__"):
     main() 
+
+
+## Resulting instructions:
+## lw x7, 0(x10)
+## addi x5, x0, 3
+## lw x6, 0(x7)
+## xori x6, x6, 32
+## sw x6, 0(x7)
+## addi x7, x7, 4
+## addi x5, x5, -1
+## bne x5, x0, -40
+
+## I checked with Professor Siddappa via email and he said that the instructions are correct.
