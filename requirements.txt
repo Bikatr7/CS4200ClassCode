@@ -1,0 +1,7 @@
+cocotb>=1.7.2
+cocotb-bus>=0.2.1
+pytest>=7.0.0
+pytest-xdist>=3.0.0 
+numpy
+pymap3d
+matplotlib
