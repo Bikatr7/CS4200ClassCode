@@ -1,0 +1,15 @@
+Cycle,Instr,Op,Fct3,Rd,Rs1,Rs2,RegWrite,ALUSrc,FwdA,FwdB,MemRd,MemWr,WBSel,bne
+0,0x00000000,0x00,0,0,0,0,False,False,,,False,False,0,False
+1,0x00052383,0x03,2,7,10,0,True,True,,,True,False,1,False
+2,0x0003a303,0x03,2,6,7,0,True,True,EX,,True,False,1,False
+3,0x00130313,0x13,0,6,6,1,True,True,EX,,False,False,0,False
+4,0x0063a023,0x23,2,0,7,6,False,True,,,False,True,0,False
+5,0x0043a303,0x03,2,6,7,4,True,True,,,True,False,1,False
+6,0x00130313,0x13,0,6,6,1,True,True,EX,,False,False,0,False
+7,0x0063a023,0x23,2,0,7,6,False,True,,,False,True,0,False
+8,0x0083a303,0x03,2,6,7,8,True,True,,,True,False,1,False
+9,0x00130313,0x13,0,6,6,1,True,True,EX,,False,False,0,False
+10,0x0063a023,0x23,2,0,7,6,False,True,,,False,True,0,False
+11,0x00000000,0x00,0,0,0,0,False,False,,,False,False,0,False
+12,0x00000000,0x00,0,0,0,0,False,False,,,False,False,0,False
+13,0x00000000,0x00,0,0,0,0,False,False,,,False,False,0,False

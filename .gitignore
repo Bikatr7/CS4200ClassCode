@@ -1,3 +1,4 @@
 .DS_Store
 goals.txt
 alu_sim_dir/
+__pycache__/

@@ -1,0 +1,9 @@
+lw x7, 0(x10)
+lw x8, 4(x7)
+lw x9, 8(x7)
+addi x10, x6, 1
+addi x11, x8, 1
+addi x12, x9, 1
+sw x10, 0(x7)
+sw x11, 4(x7)
+sw x12, 8(x7)
