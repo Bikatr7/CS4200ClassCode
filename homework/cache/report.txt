@@ -1,0 +1,248 @@
+==============================================================================
+                                ASSIGNMENT REPORT
+==============================================================================
+
+I don't have the full mac output, but i have the windows output. at the bottom
+
+------------------------------------------------------------------------------
+Part 1: System Cache Research & File Types
+------------------------------------------------------------------------------
+
+1. CPU Cache Sizes (Attempted automatic detection):
+   - Detected OS: {detected_os} 
+   - Method Used: {l2_l3_detection_method}
+   - Detailed Output/Parsing Info:
+{cache_detection_details}
+
+   - Parsed Cache Sizes (Bytes):
+     - L1 Instruction: {parsed_cache_sizes["l1i"] if parsed_cache_sizes["l1i"] else 'N/A'}
+     - L1 Data: {parsed_cache_sizes["l1d"] if parsed_cache_sizes["l1d"] else 'N/A'}
+     - L2: {parsed_cache_sizes["l2"] if parsed_cache_sizes["l2"] else 'N/A'}
+     - L3: {parsed_cache_sizes["l3"] if parsed_cache_sizes["l3"] else 'N/A'}
+
+   *Largest L2/L3 Cache Size Used for Simulation*: {L2_L3_CACHE_SIZE_BYTES:,} bytes. 
+    This value determined array dimensions for 'short' and 'long' data types 
+    and the range for random accesses.
+
+2. Common File Types and Sizes:
+   a) Plain Text File (.txt):
+      - Expected Size: Highly variable, from a few bytes (KB) for notes or 
+        short documents to potentially Megabytes (MB) for logs or manuscripts.
+      - Fits in Cache?: Small to medium text files (KB to low MB) would easily 
+        fit within the 16MB cache. Very large text files might not.
+   b) JPEG Image File (.jpg):
+      - Expected Size: Typically ranges from tens of Kilobytes (KB) for web 
+        images to several Megabytes (MB) for high-resolution photographs.
+      - Fits in Cache?: Most common JPEGs would fit within the 16MB cache. 
+        Extremely high-resolution or minimally compressed images could exceed it.
+   c) MP4 Video File (.mp4):
+      - Expected Size: Generally ranges from Megabytes (MB) for short clips 
+        to Gigabytes (GB) for full-length movies or high-definition videos.
+      - Fits in Cache?: Almost never. Video files are typically much larger 
+        than CPU caches.
+
+3. What happens if a file doesn't fit in the cache?
+   If a file or any data really does not 
+   fit into the largest cache level (L2/L3), the CPU must fetch the required 
+   data directly from main memory  more frequently. RAM access is 
+   significantly slower than cache access (by orders of magnitude). This leads 
+   to increased latency for data retrieval and lower overall performance. If 
+   the working set of data constantly needed by the CPU exceeds cache size, 
+   the system may experience "cache thrashing," where data blocks are repeatedly 
+   loaded into the cache only to be quickly evicted to make room for other 
+   needed blocks, further degrading performance.
+
+------------------------------------------------------------------------------
+Part 2: Simulation Parameters Chosen
+------------------------------------------------------------------------------
+
+1. Starting Address: `0x10000000` (Arbitrary)
+
+2. Simulated L1 Cache Layout:
+   - Total Size: 4096 bytes (Assignment requirement)
+   - Block Size: 64 bytes (Assumption)
+   - Set Associativity: 8-way Set Associative (Chosen)
+   - Replacement Policy: LRU (Chosen)
+   - Valid Bit: Implemented via `valid` flag.
+
+------------------------------------------------------------------------------
+Part 3 & 4: Simulation Results - Miss Rate Report
+------------------------------------------------------------------------------
+
+The following table presents the calculated miss rates for the **{detected_os}** run.
+
+L1 Cache Config: 4,096 bytes, 64 bytes/block, 8-way associative
+Start Address: 10000000
+Array Size for short/long matched L2/L3 Size: {L2_L3_CACHE_SIZE_BYTES:,} bytes ({l2_l3_detection_method})
+Random Access Range: Offset +{L2_L3_CACHE_SIZE_BYTES // 2:,} bytes, Size {L2_L3_CACHE_SIZE_BYTES:,} bytes
+=================================================================
+Data Type  | Row Major MR    | Col Major MR    | Random MR       
+-----------------------------------------------------------------
+char       | {results['char']['row_major']:.4f if isinstance(results.get('char', {}).get('row_major'), float) else 'N/A':<15} | {results['char']['col_major']:.4f if isinstance(results.get('char', {}).get('col_major'), float) else 'N/A':<15} | {results['char']['random']:.4f if isinstance(results.get('char', {}).get('random'), float) else 'N/A':<15}
+short      | {results['short']['row_major']:.4f if isinstance(results.get('short', {}).get('row_major'), float) else 'N/A':<15} | {results['short']['col_major']:.4f if isinstance(results.get('short', {}).get('col_major'), float) else 'N/A':<15} | {results['short']['random']:.4f if isinstance(results.get('short', {}).get('random'), float) else 'N/A':<15}
+int        | {results['int']['row_major']:.4f if isinstance(results.get('int', {}).get('row_major'), float) else 'N/A':<15} | {results['int']['col_major']:.4f if isinstance(results.get('int', {}).get('col_major'), float) else 'N/A':<15} | {results['int']['random']:.4f if isinstance(results.get('int', {}).get('random'), float) else 'N/A':<15}
+long       | {results['long']['row_major']:.4f if isinstance(results.get('long', {}).get('row_major'), float) else 'N/A':<15} | {results['long']['col_major']:.4f if isinstance(results.get('long', {}).get('col_major'), float) else 'N/A':<15} | {results['long']['random']:.4f if isinstance(results.get('long', {}).get('random'), float) else 'N/A':<15}
+=================================================================
+
+------------------------------------------------------------------------------
+Part 5: Analysis & Findings (Based on {detected_os} run)
+------------------------------------------------------------------------------
+
+1. Row-Major vs. Column-Major Performance:
+   - For data types where the array size significantly exceeded the L1 cache 
+     (`short`, `long`), Row-Major access drastically outperformed Column-Major. 
+     This is due to spatial locality. Row-major accesses consecutive elements 
+     in memory (`arr[i][j]`, `arr[i][j+1]`, ...). Since cache blocks are 64 bytes, 
+     fetching the block for `arr[i][j]` also brings in subsequent elements of 
+     that row. For `long` (8 bytes), 8 elements fit in a block; for `short` 
+     (2 bytes), 32 elements fit. This leads to many hits after the initial 
+     compulsory miss for each block. The miss rate approaches `1 / elements_per_block` 
+     (e.g., for `long`, 1/8 = 0.125; for `short`, 1/32 = 0.03125). 
+   - Column-Major access (`arr[i][j]`, `arr[i+1][j]`, ...) accesses elements 
+     separated by the length of a row in memory. For the 16MB arrays, this 
+     (not great), far exceeding the cache block size and likely the 
+     entire L1 cache size. This breaks spatial locality, causing nearly every 
+     access to require fetching a new block from memory, resulting in a miss 
+     rate approaching 100% or so i assume, i am wildly speculating based on preexisting knowledge.
+
+2. Small Array Performance (`char`, `int`):
+   - For these types, the total array size was 4096 bytes, matching the 
+     simulated L1 cache size. Consequently, after initial loading, the entire 
+     array could reside within the cache. Both row-major and column-major 
+     access patterns exhibited identical, low miss rates. The access order 
+     mattered less because the data locality was contained within the cache 
+     itself (good **temporal locality** once loaded). The miss rate primarily 
+     reflects the initial compulsory misses to fill the cache with the array 
+     data (`num_blocks / num_accesses = 64 blocks / 4096 accesses = 0.0156` for `char`; 
+     `64 blocks / 1024 accesses = 0.0625` for `int`).
+
+3. Random Access Performance:
+   - Random accesses consistently showed extremely high miss rates (approx. 99.9%) 
+     across all data types. This is expected because random access patterns 
+     exhibit neither spatial nor temporal locality over the large (16MB) address 
+     range. The probability of randomly accessing an address whose data block 
+     happens to be present in the small 4KB L1 cache is negligible. Each access 
+     is effectively a compulsory miss.
+
+4. Impact of Data Size:
+   - Within the Row-Major results, we see the miss rate increasing with data size 
+     (`char` < `short` < `int` < `long`). This is because larger data types mean 
+     fewer elements fit into a single 64-byte cache block (char: 64, short: 32, 
+     int: 16, long: 8). Since a miss occurs (at minimum) once per block load, 
+     having fewer elements per block leads to a higher miss rate when accessing 
+     the same number of bytes sequentially (or a similar miss rate when accessing 
+     the same *number* of elements, as calculated here: `1/elements_per_block`).
+
+5. Conclusion:
+   - This simulation effectively demonstrates the critical importance of data 
+     access patterns for cache performance. Algorithms and data structures that 
+     leverage spatial and temporal locality (like sequential, row-major access 
+     on C-style arrays) achieve significantly lower cache miss rates and thus 
+     better performance compared to patterns that jump sporadically through 
+     memory (like column-major on large arrays or random access).
+     blah blah blah
+
+------------------------------------------------------------------------------
+Part 5: Code
+------------------------------------------------------------------------------
+
+See above.
+
+------------------------------------------------------------------------------
+
+Tetra@Iolite MINGW64 ~/Documents/Repostories/Bikatr7/Mine/Schoolwork/CS4200ClassCode (main)
+$ py homework/cache/cache_simulator.py 
+2025-04-17 16:12:13,838 - INFO - Starting cache simulation script.
+2025-04-17 16:12:13,857 - INFO - Detected OS: Windows
+2025-04-17 16:12:14,020 - INFO - --- Cache Configuration ---
+2025-04-17 16:12:14,020 - INFO - Detected OS: Windows
+2025-04-17 16:12:14,021 - INFO - L2/L3 Size Determination: Detected max L2/L3 cache size via `wmic` (25,165,824 bytes).
+2025-04-17 16:12:14,495 - INFO -     Size used for simulation: 25,165,824 bytes
+   Parallel pool finished.          ulated L1 Cache Size: 4096 bytes
+2025-04-17 16:12:14,495 - INFO -    ulated L1 Block Size: 64 bytes
+   Average Random Miss Rate: 0.9999 ulated L1 Associativity: 8-way
+2025-04-17 16:12:14,495 - INFO - ---ulated L1 Number of Sets: 8-------                             ulated Start Address: 10000000
+2025-04-17 16:12:14,496 - INFO - Staallel Processes: 16rting simulation for data type: shor-----------------t (size: 2 bytes)                   rting simulation for data type: char (size: 1 bytes)
+2025-04-17 16:12:14,496 - INFO -   Array Dimensions: 64 x 64 (4,096 elements, 4,096 bytes total)rray Dimensions: 3072 x 4096 (12,582 Simulating Row Major Access...,912 elements, 25,165,824 bytes tota   Row Major Miss Rate: 0.0156l)                                   Simulating Column Major Access...
+2025-04-17 16:12:14,497 - INFO -       Col Major Miss Rate: 0.0156
+ Simulating Row Major Access...      Simulating Random Access (30 runs, parallel)...
+2025-04-17 16:12:52,497 - INFO -       Starting parallel pool with 16 processes...
+   Row Major Miss Rate: 0.0312         Parallel pool finished.
+2025-04-17 16:12:52,497 - INFO -       Average Random Miss Rate: 0.9999
+ Simulating Column Major Access...  -------
+2025-04-17 16:13:43,918 - INFO -    rting simulation for data type: short (size: 2 bytes)
+   Col Major Miss Rate: 1.0000      rray Dimensions: 3072 x 4096 (12,582,912 elements, 25,165,824 bytes total)
+2025-04-17 16:13:43,918 - INFO -     Simulating Row Major Access...
+ Simulating Random Access (30 runs,    Row Major Miss Rate: 0.0312
+parallel)...                         Simulating Column Major Access...
+2025-04-17 16:13:43,919 - INFO -       Col Major Miss Rate: 1.0000
+   Starting parallel pool with 16 pr Simulating Random Access (30 runs, parallel)...ocesses...                             Starting parallel pool with 16 processes...
+2025-04-17 16:19:28,417 - INFO -    
+   Parallel pool finished.
+2025-04-17 16:19:28,417 - INFO -    
+   Average Random Miss Rate: 0.9998 
+2025-04-17 16:19:28,418 - INFO - ----------
+2025-04-17 16:19:28,418 - INFO - Starting simulation for data type: int 
+(size: 4 bytes)
+2025-04-17 16:19:28,419 - INFO -   Array Dimensions: 32 x 32 (1,024 elements, 4,096 bytes total)
+2025-04-17 16:19:28,419 - INFO -    
+ Simulating Row Major Access...     
+2025-04-17 16:19:28,904 - INFO -    
+   Row Major Miss Rate: 0.0625      
+2025-04-17 16:19:28,905 - INFO -    
+ Simulating Column Major Access...  
+2025-04-17 16:19:29,347 - INFO -    
+   Col Major Miss Rate: 0.0625      
+2025-04-17 16:19:29,348 - INFO -    
+ Simulating Random Access (30 runs, 
+parallel)...
+2025-04-17 16:19:29,348 - INFO -    
+   Starting parallel pool with 16 processes...
+2025-04-17 16:19:29,750 - INFO -       Parallel pool finished.
+2025-04-17 16:19:29,751 - INFO -       Average Random Miss Rate: 0.9999
+2025-04-17 16:19:29,751 - INFO - ----------
+2025-04-17 16:19:29,752 - INFO - Starting simulation for data type: long (size: 8 bytes)
+2025-04-17 16:19:29,752 - INFO -   Array Dimensions: 1536 x 2048 (3,145,728 elements, 25,165,824 bytes total)
+2025-04-17 16:19:29,753 - INFO -     Simulating Row Major Access...
+2025-04-17 16:19:40,407 - INFO -       Row Major Miss Rate: 0.1250
+2025-04-17 16:19:40,408 - INFO -     Simulating Column Major Access...
+2025-04-17 16:19:54,827 - INFO -       Col Major Miss Rate: 1.0000
+2025-04-17 16:19:54,827 - INFO -     Simulating Random Access (30 runs, parallel)...
+2025-04-17 16:19:54,828 - INFO -       Starting parallel pool with 16 processes...
+2025-04-17 16:21:17,056 - INFO -       Parallel pool finished.
+2025-04-17 16:21:17,056 - INFO -       Average Random Miss Rate: 0.9998
+2025-04-17 16:21:17,056 - INFO - ----------
+2025-04-17 16:21:17,057 - INFO - --- Final Miss Rate Report --- Generating Table ---
+L1 Cache Config: 4,096 bytes, 64 bytes/block, 8-way associative
+Start Address: 10000000
+Array Size for short/long matched L2/L3 Size: 25,165,824 bytes (Detected max L2/L3 cache size via `wmic` (25,165,824 bytes).)
+Random Access Range: Offset +12,582,912 bytes, Size 25,165,824 bytes
+=================================================================
+Data Type  | Row Major MR    | Col Major MR    | Random MR
+-----------------------------------------------------------------
+char       | 0.0156          | 0.0156          | 0.9999
+short      | 0.0312          | 1.0000          | 0.9998
+int        | 0.0625          | 0.0625          | 0.9999
+long       | 0.1250          | 1.0000          | 0.9998
+=================================================================
+2025-04-17 16:21:17,057 - INFO - Script finished.
+
+Tetra@Iolite MINGW64 ~/Documents/Repostories/Bikatr7/Mine/Schoolwork/CS4200ClassCode (main)
+$ 
+
+------------------------------------------------------------------------------
+
+Windows Run Results (L2/L3 Detected: 25,165,824 bytes):
+=================================================================
+Data Type  | Row Major MR    | Col Major MR    | Random MR       
+-----------------------------------------------------------------
+char       | 0.0156          | 0.0156          | 0.9999          
+short      | 0.0312          | 1.0000          | 0.9998          
+int        | 0.0625          | 0.0625          | 0.9999          
+long       | 0.1250          | 1.0000          | 0.9998          
+=================================================================
+(Analysis consistent with the general findings in Part 5)
+
+==============================================================================
+                              END OF REPORT
+==============================================================================
