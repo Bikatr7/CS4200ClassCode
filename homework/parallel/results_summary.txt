@@ -1,0 +1,29 @@
+Assignment Results Summary
+==========================
+
+Part 1: Local System CPU Specifications
+---------------------------------------
+CPU details obtained using `sysctl` on macOS:
+- Model: Mac16,1
+- Machine Type: arm64
+- Number of Cores (hw.ncpu): 10
+- L1 Instruction Cache Size (hw.l1icachesize): 131072 bytes
+- L1 Data Cache Size (hw.l1dcachesize): 65536 bytes
+- L2 Cache Size (hw.l2cachesize): 4194304 bytes
+- L3 Cache Size: Not explicitly reported by the command used.
+
+Part 2: Compute Times (Local System)
+------------------------------------
+The `incline_compute.py` script was run locally. 
+
+Element Sizes: [10, 50, 100, 250, 500, 750, 1000, 2500, 5000, 7500, 10000]
+Timed Results (seconds): [0.1246023178100586, 0.002122163772583008, 0.0004119873046875, 0.0005459785461425781, 0.0019719600677490234, 0.008533000946044922, 0.014367818832397461, 0.18611598014831543, 1.0972058773040771, 2.685497999191284, 6.95436692237854]
+
+Part 3: GPU
+-----------
+Will deal with this later
+
+Part 4: Graph
+-------------
+A graph summarizing the computational performance has been generated and saved as `runtime_graph.png`
+This graph plots the time in seconds (Y-axis) against the number of elements (X-axis) for the local CPU computation.
